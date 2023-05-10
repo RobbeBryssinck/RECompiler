@@ -1,27 +1,48 @@
-#include <iostream>
+#include <stdio.h>
 #include <Windows.h>
+#include <cstdint>
+#include <string>
 
 static uint64_t s_testInt = 0;
 
 bool GoToSleep(DWORD ms)
 {
   Sleep(ms);
-  printf("Test int: %d", s_testInt);
+  printf("Test int: %lld\n", s_testInt);
   return true;
 }
 
+class Dummy
+{
+public:
+  int a = 5;
+  uint64_t b = 0xFFFF;
+  Dummy* pAnotherDummy = nullptr;
+  std::string dummyName = "Bobby";
+
+  void PrintName()
+  {
+    printf("Dummy %s", dummyName.c_str());
+  }
+};
+
+
 int main()
 {
-  std::cout << "Program started.\n";
+  printf("Program started.\n");
+
+  Dummy dummy{};
 
   while (true)
   {
     bool result = GoToSleep(5000);
     if (result)
-      std::cout << "Waking up.\n";
+      printf("Waking up.\n");
     else
-      std::cout << "Failed to sleep.\n";
+      printf("Failed to sleep.\n");
+
+    dummy.PrintName();
   }
 
-  std::cout << "Exiting program.\n";
+  printf("Exiting program.\n");
 }
