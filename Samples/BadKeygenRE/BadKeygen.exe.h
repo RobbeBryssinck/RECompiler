@@ -90,66 +90,73 @@ protected:
   T* pHookFunction{};
 };
 
-// Symbol defined, type: stub function, address: 0x1400116b3
-void __fastcall j___CheckForDebuggerJustMyCode(unsigned __int8 *JMC_flag);
-static IdaFunction<decltype(j___CheckForDebuggerJustMyCode)> Real_j___CheckForDebuggerJustMyCode { 71347, &j___CheckForDebuggerJustMyCode };
-
-// Symbol defined, type: stub function, address: 0x14001120d
+// Symbol defined, type: stub function, address: 0x140011118
 unsigned __int8 __fastcall GenerateKey();
-static IdaFunction<decltype(GenerateKey)> Real_GenerateKey { 70157, &GenerateKey };
+static IdaFunction<decltype(GenerateKey)> Real_GenerateKey { 69912, &GenerateKey };
 
-// Symbol defined, type: stub function, address: 0x1400113f7
+// Symbol defined, type: stub function, address: 0x1400111fe
 int j_scanf_s(const char *_Format, ...);
-static IdaFunction<decltype(j_scanf_s)> Real_j_scanf_s { 70647, &j_scanf_s };
-
-// Symbol defined, type: stub function, address: 0x14001161d
-bool __fastcall IsKeyValid(unsigned __int8 aKey);
-static IdaFunction<decltype(IsKeyValid)> Real_IsKeyValid { 71197, &IsKeyValid };
+static IdaFunction<decltype(j_scanf_s)> Real_j_scanf_s { 70142, &j_scanf_s };
 
 // Symbol defined, type: stub function, address: 0x140011339
+bool __fastcall j_IsKeyValid(unsigned __int8 aKey);
+static IdaFunction<decltype(j_IsKeyValid)> Real_j_IsKeyValid { 70457, &j_IsKeyValid };
+
+// Symbol defined, type: stub function, address: 0x140011195
 int j_printf(const char *_Format, ...);
-static IdaFunction<decltype(j_printf)> Real_j_printf { 70457, &j_printf };
+static IdaFunction<decltype(j_printf)> Real_j_printf { 70037, &j_printf };
 
-// Symbol defined, type: stub function, address: 0x1400115c3
+// Symbol defined, type: stub function, address: 0x140011311
 void __fastcall j__RTC_CheckStackVars(void *frame, void *v);
-static IdaFunction<decltype(j__RTC_CheckStackVars)> Real_j__RTC_CheckStackVars { 71107, &j__RTC_CheckStackVars };
+static IdaFunction<decltype(j__RTC_CheckStackVars)> Real_j__RTC_CheckStackVars { 70417, &j__RTC_CheckStackVars };
 
-// Symbol defined, type: global variable, address: 0x14003f0d8
-static IdaVariable<unsigned __int8> __14D56680_main_cpp { 258264 };
+// Symbol defined, type: global variable, address: 0x14001ad80
+static IdaVariable<const char[]> _Format { 109952 };
 
-// Symbol defined, type: global variable, address: 0x140033670
-static IdaVariable<const char[]> _Format { 210544 };
+// Symbol defined, type: global variable, address: 0x14001ad98
+static IdaVariable<const char[]> a1GenerateKey { 109976 };
 
-// Symbol defined, type: global variable, address: 0x140033688
-static IdaVariable<const char[]> a1GenerateKey { 210568 };
+// Symbol defined, type: global variable, address: 0x14001adb0
+static IdaVariable<const char[]> a2InputKey { 110000 };
 
-// Symbol defined, type: global variable, address: 0x1400336a0
-static IdaVariable<const char[]> a2InputKey { 210592 };
+// Symbol defined, type: global variable, address: 0x14001adc4
+static IdaVariable<const char[]> aD { 110020 };
 
-// Symbol defined, type: global variable, address: 0x1400336b4
-static IdaVariable<const char[]> aD { 210612 };
+// Symbol defined, type: global variable, address: 0x14001adc8
+static IdaVariable<const char[]> aGeneratedKeyD { 110024 };
 
-// Symbol defined, type: global variable, address: 0x1400336b8
-static IdaVariable<const char[]> aGeneratedKeyD { 210616 };
+// Symbol defined, type: global variable, address: 0x14001ade0
+static IdaVariable<const char[]> aInputTheKey { 110048 };
 
-// Symbol defined, type: global variable, address: 0x1400336d0
-static IdaVariable<const char[]> aInputTheKey { 210640 };
+// Symbol defined, type: global variable, address: 0x14001adc0
+static IdaVariable<const char[]> asc_14001ADC0 { 110016 };
 
-// Symbol defined, type: global variable, address: 0x1400336b0
-static IdaVariable<const char[]> asc_1400336B0 { 210608 };
+// Symbol defined, type: global variable, address: 0x14001adf4
+static IdaVariable<const char[]> aHhd { 110068 };
 
-// Symbol defined, type: global variable, address: 0x140032d20
-static IdaVariable<const char[]> aHhd { 208160 };
+// Symbol defined, type: global variable, address: 0x14001ae00
+static IdaVariable<const char[]> aKeyIsValid { 110080 };
 
-// Symbol defined, type: global variable, address: 0x1400336e8
-static IdaVariable<const char[]> aKeyIsValid { 210664 };
+// Symbol defined, type: global variable, address: 0x14001ae18
+static IdaVariable<const char[]> aKeyIsNotValid { 110104 };
 
-// Symbol defined, type: global variable, address: 0x140033700
-static IdaVariable<const char[]> aKeyIsNotValid { 210688 };
+// Symbol defined, type: global variable, address: 0x14001ad50
+static IdaVariable<const _UNKNOWN> v { 109904 };
 
-// Symbol defined, type: global variable, address: 0x140033390
-static IdaVariable<const _UNKNOWN> stru_140033390 { 209808 };
-
-// Symbol defined, type: full function, address: 0x140017a40
+// Symbol defined, type: full function, address: 0x140011a90
 __int64 __fastcall main_0();
-static IdaFunction<decltype(main_0)> Real_main { 96832, &main_0 };
+static IdaFunction<decltype(main_0)> Real_main { 72336, &main_0 };
+
+// Symbol defined, type: stub function, address: 0x14001137a
+void __fastcall j___CheckForDebuggerJustMyCode(unsigned __int8 *JMC_flag);
+static IdaFunction<decltype(j___CheckForDebuggerJustMyCode)> Real_j___CheckForDebuggerJustMyCode { 70522, &j___CheckForDebuggerJustMyCode };
+
+// Symbol defined, type: global variable, address: 0x1400230d8
+static IdaVariable<unsigned __int8> __14D56680_main_cpp { 143576 };
+
+// Symbol defined, type: global variable, address: 0x14001abb0
+static IdaVariable<const unsigned __int8[3]> validXoredKeys { 109488 };
+
+// Symbol defined, type: full function, address: 0x140011830
+_BOOL8 __fastcall IsKeyValid(unsigned __int8 aKey);
+static IdaFunction<decltype(IsKeyValid)> Real_IsKeyValid { 71728, &IsKeyValid };

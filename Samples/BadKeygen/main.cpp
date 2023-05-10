@@ -4,18 +4,27 @@
 #include <vector>
 
 static constexpr uint8_t s_secret = 23;
-static const std::vector<uint8_t> validXoredKeys{ 23, 41, 244 };
+static const uint8_t validXoredKeys[3] { 23, 41, 244 };
 
 uint8_t GenerateKey()
 {
-  auto index = rand() % validXoredKeys.size();
+  auto index = rand() % 3;
   return validXoredKeys[index] xor s_secret;
 }
 
 bool IsKeyValid(uint8_t aKey)
 {
   uint8_t xoredKey = aKey xor s_secret;
-  return std::find(validXoredKeys.begin(), validXoredKeys.end(), xoredKey) != validXoredKeys.end();
+  
+  bool found = false;
+  for (int i = 0; i < 3; i++)
+  {
+    found = validXoredKeys[i] == xoredKey;
+    if (found)
+      break;
+  }
+
+  return found;
 }
 
 int main()
