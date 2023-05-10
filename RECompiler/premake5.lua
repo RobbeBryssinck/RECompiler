@@ -7,8 +7,6 @@ project "RECompiler"
 
    includedirs
    {
-      "../Vendor/simpleini",
-      "../Libraries",
       "../Components"
    }
 
@@ -17,5 +15,4 @@ project "RECompiler"
       "../Build/Bin/%{cfg.longname}"
    }
 
-   links "RECore"
    links "RELauncher"

@@ -7,7 +7,6 @@ project "RECompilerGenerator"
 
    includedirs
    {
-      "../Vendor/simpleini",
       "../Libraries",
       "../Components"
    }
