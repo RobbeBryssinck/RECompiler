@@ -8,7 +8,19 @@
 #include <codecvt>
 #include <memory>
 
+std::string OpenDialogue(const std::string* apcDialogueName, FileFilters* apcFilters, bool aIsFolder);
+
 std::string OpenFileDialogue(const std::string* apcDialogueName, FileFilters* apcFilters)
+{
+  return OpenDialogue(apcDialogueName, apcFilters, false);
+}
+
+std::string OpenFolderDialogue(const std::string* apcDialogueName)
+{
+  return OpenDialogue(apcDialogueName, nullptr, true);
+}
+
+std::string OpenDialogue(const std::string* apcDialogueName, FileFilters* apcFilters, bool aIsFolder)
 {
   std::string filePath = "";
 
@@ -29,7 +41,7 @@ std::string OpenFileDialogue(const std::string* apcDialogueName, FileFilters* ap
       wideFilter.first = converter.from_bytes(filter.first);
       wideFilter.second = converter.from_bytes(filter.second);
 
-      pFilters[i] = COMDLG_FILTERSPEC{wideFilter.first.c_str(), wideFilter.second.c_str()};
+      pFilters[i] = COMDLG_FILTERSPEC{ wideFilter.first.c_str(), wideFilter.second.c_str() };
     }
   }
 
@@ -43,6 +55,9 @@ std::string OpenFileDialogue(const std::string* apcDialogueName, FileFilters* ap
     {
       if (pFilters)
         pFileOpen->SetFileTypes(wideFilters.size(), pFilters.get());
+
+      if (aIsFolder)
+        pFileOpen->SetOptions(FOS_PICKFOLDERS);
 
       if (apcDialogueName)
       {

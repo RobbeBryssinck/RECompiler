@@ -3,6 +3,8 @@
 #include "SimpleIni.h"
 #include <format>
 #include <Windows.h>
+#include <RECore/FileHandling.h>
+#include <filesystem>
 
 struct Settings
 {
@@ -66,7 +68,7 @@ BuildResult BuildInjectedCode()
   return BuildResult::kUnknown;
 }
 
-int main()
+bool ExecuteRECompiler()
 {
   switch (s_settings.LoadSettings())
   {
@@ -78,7 +80,7 @@ int main()
   case Settings::LoadResult::kDllPathNotFound:
   default:
     std::cout << "Loading settings failed.\n";
-    return 1;
+    return false;
   }
 
   auto result = BuildInjectedCode();
@@ -89,7 +91,7 @@ int main()
     break;
   default:
     std::cout << "Build failed.\n";
-    return 1;
+    return false;
   }
 
   STARTUPINFOA startup;
@@ -102,20 +104,20 @@ int main()
   if (!CreateProcessA(NULL, const_cast<char*>(s_settings.targetPath.c_str()), NULL, NULL, FALSE, CREATE_SUSPENDED | CREATE_NEW_CONSOLE, NULL, NULL, &startup, &process))
   {
     std::cout << "Failed to create process: " << GetLastError() << "\n";
-    return 1;
+    return false;
   }
 
   if (process.hProcess == NULL || process.hProcess == INVALID_HANDLE_VALUE)
   {
     std::cout << "No process handle found.\n";
-    return 1;
+    return false;
   }
-  
+
   void* pInjected = VirtualAllocEx(process.hProcess, 0, MAX_PATH, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
   if (!pInjected)
   {
     std::cout << "Failed to allocate injected memory.\n";
-    return 1;
+    return false;
   }
 
   WriteProcessMemory(process.hProcess, pInjected, s_settings.dllPath.c_str(), s_settings.dllPath.length() + 1, nullptr);
@@ -136,4 +138,50 @@ int main()
   ResumeThread(process.hThread);
 
   CloseHandle(process.hProcess);
+
+  return true;
+}
+
+void GenerateProject(std::string& aPath)
+{
+  while (aPath == "")
+  {
+    std::string title = "Select a target directory.";
+    aPath = OpenFolderDialogue(&title);
+
+    if (aPath == "")
+      std::cerr << "Failed to select target directory.\n";
+  }
+
+  std::filesystem::copy("./Template", aPath, std::filesystem::copy_options::overwrite_existing | std::filesystem::copy_options::recursive);
+}
+
+int main(int argc, char** argv)
+{
+  if (argc == 1)
+  {
+    ExecuteRECompiler();
+  }
+  else if (argc >= 4)
+  {
+    std::cerr << "Too many arguments." << std::endl;
+    return 1;
+  }
+  else if (argc >= 2)
+  {
+    if (_stricmp(argv[1], "generate"))
+    {
+      std::cerr << "Second argument must be a valid keyword." << std::endl;
+      return 1;
+    }
+
+    std::string path = "";
+    if (argc == 3)
+      path = argv[2];
+
+    GenerateProject(path);
+
+    std::cout << "Project was successfully generated at '" << path << "'.\n";
+    std::cout << "Run 'generateSolution.bat' to generate the Visual Studio project files." << std::endl;
+  }
 }

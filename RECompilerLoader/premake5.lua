@@ -8,7 +8,8 @@ project "RECompilerLoader"
    includedirs
    {
       "../Vendor/spdlog/include",
-      "../Vendor/simpleini"
+      "../Vendor/simpleini",
+      "../Libraries"
    }
 
    libdirs
