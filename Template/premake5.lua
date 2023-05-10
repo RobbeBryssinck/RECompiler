@@ -24,4 +24,4 @@ workspace "RECompilerProject"
    objdir ("Build/Obj/%{cfg.longname}")
 
 include("Libraries")
-include("Project")
+include("RECompilerProject")

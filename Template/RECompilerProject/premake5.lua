@@ -1,5 +1,5 @@
 group "Projects"
-project "Project"
+project "RECompilerProject"
    kind "SharedLib"
    language "C++"
 
