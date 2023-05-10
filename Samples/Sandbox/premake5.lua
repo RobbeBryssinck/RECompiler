@@ -3,3 +3,8 @@ project "Sandbox"
    language "C++"
 
    files {"**.h", "**.cpp"}
+
+   includedirs
+   {
+      "../../Vendor/minhook/include"
+   }

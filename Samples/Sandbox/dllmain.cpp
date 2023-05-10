@@ -1,5 +1,6 @@
 #include <Windows.h>
 #include <iostream>
+#include <MinHook.h>
 
 DWORD WINAPI MainThread(HMODULE hModule)
 {
