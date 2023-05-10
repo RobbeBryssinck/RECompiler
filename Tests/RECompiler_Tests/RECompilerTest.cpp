@@ -2,6 +2,15 @@
 #include <RELauncher/RELauncher.h>
 #include <filesystem>
 
+/*
+* How to run the integration tests:
+* 1. Use RECompilerGenerator to generate a project called "LaunchSample".
+* 2. Place the generated project's directory in the same directory as the test binary.
+* 3. Build CppApp1 and place the binary (CppApp1.exe) in the same directory as the test binary.
+* 4. Open CppApp1.exe in Ida and run the recompiler_generator.py plugin on the main function.
+* 5. Run the test binary.
+*/
+
 namespace
 {
   class LaunchFixture : public ::testing::Test

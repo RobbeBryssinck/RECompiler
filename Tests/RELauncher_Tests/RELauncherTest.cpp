@@ -2,6 +2,13 @@
 #include <RELauncher/RELauncher.h>
 #include <filesystem>
 
+/*
+* How to run the unit tests:
+* 1. Use RECompilerGenerator to generate a project called "LaunchSample".
+* 2. Fill in the "target_path" field of the settings file with a random binary (CppApp1.exe works well).
+* 3. Run the test binary.
+*/
+
 namespace
 {
   class ScopedSampleDir : public ::testing::Test
