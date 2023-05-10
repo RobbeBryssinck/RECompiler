@@ -110,7 +110,7 @@ int main()
     std::cout << "No process handle found.\n";
     return 1;
   }
-
+  
   void* pInjected = VirtualAllocEx(process.hProcess, 0, MAX_PATH, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
   if (!pInjected)
   {
@@ -128,8 +128,12 @@ int main()
     threadResult = WaitForSingleObject(dllLoadThread, 1000);
   } while (threadResult != 0);
 
+#if 1
   if (dllLoadThread != NULL && dllLoadThread != INVALID_HANDLE_VALUE)
     CloseHandle(dllLoadThread);
+#endif
+
+  VirtualFreeEx(process.hProcess, pInjected, MAX_PATH, MEM_DECOMMIT | MEM_RELEASE);
 
   ResumeThread(process.hThread);
 
@@ -137,4 +141,11 @@ int main()
 
   int a;
   std::cin >> a;
+
+#if 0
+  void* pUnloadArgs = VirtualAllocEx(process.hProcess, 0, sizeof(HMODULE) + sizeof(DWORD), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+  uint32_t unloadArgs[2] = { 0, 0 };
+  WriteProcessMemory(process.hProcess, pUnloadArgs, unloadArgs, )
+  HANDLE dllUnloadThread = CreateRemoteThread(process.hProcess, nullptr, 0, (LPTHREAD_START_ROUTINE)FreeLibraryAndExitThread, )
+#endif
 }

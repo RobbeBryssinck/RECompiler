@@ -70,9 +70,8 @@ extern "C" BOOL APIENTRY DllMain(HMODULE hModule,
       return FALSE;
     }
 
-    std::cout << "DLL entry before!\n";
-    Sleep(4000);
-    std::cout << "DLL entry after!\n";
+    std::cout << "DLL entry succeeded!\n";
+
     break;
   }
   case DLL_THREAD_ATTACH:
