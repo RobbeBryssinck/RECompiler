@@ -39,13 +39,8 @@ namespace
 
   RELauncher::Settings LaunchFixture::settings = RELauncher::Settings();
 
-  TEST(RELauncher, LaunchFromSettings)
+  TEST_F(LaunchFixture, LaunchFromSettings)
   {
-    RELauncher::Settings settings{};
-    ASSERT_EQ(settings.LoadSettings(), RELauncher::Settings::LoadResult::kOk);
-
-    auto result = RELauncher::Launch(settings);
-
-    EXPECT_EQ(result, RELauncher::LaunchResult::kOk);
+    ASSERT_EQ(info.result, RELauncher::LaunchResult::kOk);
   }
 }

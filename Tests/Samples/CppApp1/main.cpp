@@ -1,4 +1,5 @@
 #include <iostream>
+#include <Windows.h>
 
 enum TestEnum1
 {
@@ -34,6 +35,10 @@ int main(int argc, char** argv)
 {
   TestClass1 tc1{};
   tc1.t1.a = kTestC;
-  bool result = PrintTestClass(&tc1);
-  std::cout << result << std::endl;
+  while (true)
+  {
+    bool result = PrintTestClass(&tc1);
+    std::cout << result << std::endl;
+    Sleep(2000);
+  }
 }

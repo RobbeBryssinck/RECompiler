@@ -41,6 +41,7 @@ namespace RELauncher
 
   struct LaunchInfo
   {
+    LaunchInfo() = default;
     LaunchInfo(LaunchResult aResult) : result(aResult), process(nullptr) {}
     LaunchInfo(LaunchResult aResult, HANDLE aProcess) : result(aResult), process(aProcess) {}
 
