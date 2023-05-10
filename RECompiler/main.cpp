@@ -29,7 +29,7 @@ struct Settings
       return LoadResult::kSettingsFileNotFound;
 
     targetPath = ini.GetValue("global", "target_path");
-    if (targetPath.empty())
+    if (targetPath.empty() || !std::filesystem::exists(targetPath))
     {
       std::cout << "Target path not found, please select the target binary." << std::endl;
 
