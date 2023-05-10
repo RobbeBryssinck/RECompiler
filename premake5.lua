@@ -26,3 +26,6 @@ workspace "RECompiler"
 include("Libraries")
 include("RECompiler")
 include("RECompilerGenerator")
+include("Tests")
+include("Vendor")
+include("Components")

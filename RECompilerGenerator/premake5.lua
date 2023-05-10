@@ -8,7 +8,8 @@ project "RECompilerGenerator"
    includedirs
    {
       "../Vendor/simpleini",
-      "../Libraries"
+      "../Libraries",
+      "../Components"
    }
 
    libdirs
@@ -17,3 +18,4 @@ project "RECompilerGenerator"
    }
 
    links "RECore"
+   links "REGenerator"

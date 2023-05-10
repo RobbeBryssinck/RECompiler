@@ -1,9 +1,9 @@
+#include <REGenerator/REGenerator.h>
 #include <iostream>
 #include <Windows.h>
-#include <RECore/FileHandling.h>
-#include <filesystem>
 #include <fstream>
-#include <SimpleIni.h>
+#include <filesystem>
+#include <RECore/FileHandling.h>
 
 std::string GetFolder()
 {
@@ -21,99 +21,44 @@ std::string GetFolder()
   return path;
 }
 
-void SetProjectName(const std::string& aProjectPath, const std::string& aProjectName)
-{
-  std::vector<std::string> files{ aProjectPath + "/premake5.lua", aProjectPath + "/RECompilerProject/premake5.lua" };
-  const std::string defaultName = "RECompilerProject";
-  
-  for (const auto& filename : files)
-  {
-    std::ifstream file(filename);
-    std::vector<std::string> newContents{};
-    std::string line{};
-    size_t wordLength = defaultName.length();
-
-    while (std::getline(file, line))
-    {
-      while (true)
-      {
-        size_t position = line.find(defaultName);
-        if (position != std::string::npos)
-          line.replace(position, wordLength, aProjectName);
-        else
-          break;
-      }
-
-      newContents.push_back(line);
-    }
-
-    file.close();
-
-    std::ofstream newFile(filename);
-    for (const auto& newLine : newContents)
-    {
-      newFile << newLine << "\n";
-    }
-  }
-
-  std::filesystem::rename(aProjectPath + "/" + defaultName, aProjectPath + "/" + aProjectName);
-}
-
-bool GenerateSettingsFile(const std::string& aPath, const std::string& aProjectName)
-{
-  const std::string iniFilename = aPath + "\\settings.ini";
-
-  CSimpleIniA ini;
-  ini.SetUnicode();
-
-  SI_Error rc = ini.LoadFile(iniFilename.c_str());
-  if (rc < 0)
-    return false;
-
-  std::string buildPath{ aPath + "\\Generated\\" + aProjectName + ".vcxproj" };
-  ini.SetValue("global", "build_path", buildPath.c_str());
-
-  std::string dllPath{ aPath + "\\Build\\Bin\\Debug\\" + aProjectName + ".dll" };
-  ini.SetValue("global", "dll_path", dllPath.c_str());
-
-  rc = ini.SaveFile(iniFilename.c_str());
-  if (rc < 0)
-    return false;
-
-  return true;
-}
-
 int main(int argc, char** argv)
 {
-  if (argc > 2)
+  std::string path{};
+
+  switch (argc)
   {
+  case 1:
+    std::cout << "Select a target directory in which the RECompiler project will be created.\n";
+    path = GetFolder();
+    break;
+  case 2:
+    path = argv[1];
+    break;
+  default:
     std::cerr << "Too many arguments were given. Did you put the path in quotation marks?" << std::endl;
     return 1;
   }
 
-  if (!std::filesystem::exists("./Template"))
+  while (!std::filesystem::exists(path))
   {
-    std::cerr << "The 'Template' directory to generate the files does not exist in the current working directory." << std::endl;
-    return 1;
-  }
-
-  std::string path = "";
-  if (argc == 2)
-    path = argv[1];
-  else
-  {
-    std::cout << "Select a target directory in which the RECompiler project will be created.\n";
+    std::cout << "The file path '" << path << "' is invalid. Please select a valid file path." << std::endl;
     path = GetFolder();
   }
 
-  std::filesystem::copy("./Template", path, std::filesystem::copy_options::overwrite_existing | std::filesystem::copy_options::recursive);
-
-  std::filesystem::path targetPath = path;
-  std::string projectName = targetPath.filename().string();
-  SetProjectName(path, projectName);
-
-  GenerateSettingsFile(path, projectName);
-
-  std::cout << "Project was successfully generated at '" << path << "'\n"
-    << "Run 'generateSolution.bat' in the output directory to generate the Visual Studio project files." << std::endl;
+  switch (REGenerator::Generate(path))
+  {
+  case REGenerator::GenerateResult::kOk:
+    std::cout << "Project was successfully generated at '" << path << "'\n"
+      << "Run 'generateSolution.bat' in the output directory to generate the Visual Studio project files." << std::endl;
+    return 0;
+  case REGenerator::GenerateResult::kInvalidTargetPath:
+    std::cerr << "The target path '" << path << "' is invalid." << std::endl;
+    return 1;
+  case REGenerator::GenerateResult::kMissingTemplateDir:
+    std::cerr << "The 'Template' directory to generate the files does not exist in the current working directory." << std::endl;
+    return 1;
+  default:
+    std::cerr << "Project generation has failed." << std::endl;
+    return 1;
+  }
 }
