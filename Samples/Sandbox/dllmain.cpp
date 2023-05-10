@@ -32,6 +32,16 @@ void ListenForTerminateHooks(HMODULE hModule)
 
 DWORD WINAPI MainThread(HMODULE hModule)
 {
+  // This thread can be used to invoke code from the target SDk.
+  // An example of this could be written as follows:
+
+  while (true)
+  {
+    if (GetAsyncKeyState(VK_NUMPAD1) & 1)
+    {
+      // Call some function from the target SDK here.
+    }
+  }
 
   return 0;
 }
