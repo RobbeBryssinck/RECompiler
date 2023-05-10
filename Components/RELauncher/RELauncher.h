@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <Windows.h>
 
 namespace RELauncher
 {
@@ -38,6 +39,15 @@ namespace RELauncher
     kAllocDllPathFailed,
   };
 
-  LaunchResult Launch(const Settings& aSettings);
+  struct LaunchInfo
+  {
+    LaunchInfo(LaunchResult aResult) : result(aResult), process(nullptr) {}
+    LaunchInfo(LaunchResult aResult, HANDLE aProcess) : result(aResult), process(aProcess) {}
+
+    LaunchResult result;
+    HANDLE process;
+  };
+
+  LaunchInfo Launch(const Settings& aSettings);
 
 }

@@ -33,7 +33,9 @@ int main(int argc, char** argv)
     return 1;
   }
 
-  switch (RELauncher::Launch(settings))
+  auto launchInfo = RELauncher::Launch(settings);
+  
+  switch (launchInfo.result)
   {
   case RELauncher::LaunchResult::kOk:
     std::cout << "Process launched successfully." << std::endl;

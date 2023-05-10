@@ -3,39 +3,49 @@
 
 namespace
 {
-#if 0
-  class DiaInterfaceTest : public ::testing::Test
+  TEST(RELauncherSettings, TestLoadExistingSettings)
+  {
+    RELauncher::Settings settings{};
+    
+    auto result = settings.LoadSettings();
+
+    EXPECT_EQ(result, RELauncher::Settings::LoadResult::kOk);
+  }
+
+  class LaunchFixture : public ::testing::Test
   {
   public:
     static void SetUpTestSuite()
     {
-      pUsym = std::make_unique<USYM>(DiaInterface::CreateUsymFromFile("CppApp1.pdb").value());
+      settings.LoadSettings();
     }
 
-    static std::unique_ptr<USYM> pUsym;
+    static RELauncher::Settings settings;
+
+  protected:
+    void SetUp() override
+    {
+      info = RELauncher::Launch(settings);
+    }
+
+    void TearDown() override
+    {
+      // TODO: exit code?
+      TerminateProcess(info.process, 1);
+    }
+
+    RELauncher::LaunchInfo info;
   };
 
-  std::unique_ptr<USYM> DiaInterfaceTest::pUsym = nullptr;
+  RELauncher::Settings LaunchFixture::settings = RELauncher::Settings();
 
-  TEST(DiaInterface, LoadPdbFile)
+  TEST(RELauncher, LaunchFromSettings)
   {
-    EXPECT_NO_THROW(DiaInterface::InitializeDia("CppApp1.pdb"));
-    
-    DiaInterface::Release();
-  }
+    RELauncher::Settings settings{};
+    ASSERT_EQ(settings.LoadSettings(), RELauncher::Settings::LoadResult::kOk);
 
-  TEST(DiaInterface, CreateUsymFromFile)
-  {
-    auto pUsym = DiaInterface::CreateUsymFromFile("CppApp1.pdb");
-    
-    ASSERT_TRUE(pUsym.has_value());
-  }
+    auto result = RELauncher::Launch(settings);
 
-  TEST_F(DiaInterfaceTest, TestHeader)
-  {
-    EXPECT_EQ(pUsym->header.magic, 'MYSU');
-    EXPECT_EQ(pUsym->header.originalFormat, USYM::OriginalFormat::kPdb);
-    EXPECT_EQ(pUsym->header.architecture, USYM::Architecture::kX86_64);
+    EXPECT_EQ(result, RELauncher::LaunchResult::kOk);
   }
-#endif
 }

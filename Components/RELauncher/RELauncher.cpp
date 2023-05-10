@@ -3,7 +3,6 @@
 #include <iostream>
 #include "SimpleIni.h"
 #include <format>
-#include <Windows.h>
 #include <RECore/FileHandling.h>
 #include <filesystem>
 
@@ -89,7 +88,7 @@ namespace RELauncher
     return BuildResult::kUnknown;
   }
 
-  LaunchResult Launch(const Settings& aSettings)
+  LaunchInfo Launch(const Settings& aSettings)
   {
     if (!aSettings.isInitialized)
       return LaunchResult::kSettingsNotInitialized;
@@ -137,9 +136,7 @@ namespace RELauncher
 
     ResumeThread(process.hThread);
 
-    CloseHandle(process.hProcess);
-
-    return LaunchResult::kOk;
+    return { LaunchResult::kOk, process.hProcess };
   }
 
 }
