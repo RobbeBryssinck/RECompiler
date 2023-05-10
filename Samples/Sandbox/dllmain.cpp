@@ -4,23 +4,29 @@
 
 DWORD WINAPI MainThread(HMODULE hModule)
 {
-  AllocConsole();
-  FILE* f;
-  freopen_s(&f, "CONOUT$", "w", stdout);
-
-  std::cout << "DLL entry before!\n";
-  Sleep(4000);
-  std::cout << "DLL entry after!\n";
-
-  while (true)
+  HANDLE hTerminateHooks = CreateEvent(NULL, FALSE, FALSE, TEXT("TerminateHooksRE"));
+  if (hTerminateHooks)
   {
-    Sleep(1000);
-  }
+    DWORD result = WaitForSingleObject(hTerminateHooks, INFINITE);
+    std::cout << "Received TerminateHooksRE event, result: " << result << "\n";
 
-  if (f)
-    fclose(f);
-  FreeConsole();
-  FreeLibraryAndExitThread(hModule, 0);
+    // TODO: this doesn't work. Disabling and deleting hooks does not account for
+    // threads currently running this code. Not sure whether this is avoidable.
+    MH_STATUS mhResult = MH_DisableHook(MH_ALL_HOOKS);
+    std::cout << "Attempted to disable all hooks by MinHook: " << mhResult << "\n";
+
+    // TODO: calling MH_DeleteHook shouldn't be necessary, as the hooks should live in the DLL's memory.
+    // Verify this anyway.
+
+    mhResult = MH_Uninitialize();
+    std::cout << "Attempted to uninitialize MinHook: " << mhResult << "\n";
+
+    FreeLibraryAndExitThread(hModule, 0);
+  }
+  else
+  {
+    std::cout << "Failed to create TerminateHooksRE event.\n";
+  }
 
   return 0;
 }
@@ -43,8 +49,6 @@ extern "C" BOOL APIENTRY DllMain(HMODULE hModule,
   {
   case DLL_PROCESS_ATTACH:
   {
-    //CloseHandle(CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)MainThread, hModule, 0, nullptr));
-
     MH_STATUS status;
 
     status = MH_Initialize();
@@ -72,6 +76,8 @@ extern "C" BOOL APIENTRY DllMain(HMODULE hModule,
 
     std::cout << "DLL entry succeeded!\n";
 
+    CloseHandle(CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)MainThread, hModule, 0, nullptr));
+
     break;
   }
   case DLL_THREAD_ATTACH:
@@ -83,7 +89,7 @@ extern "C" BOOL APIENTRY DllMain(HMODULE hModule,
   }
   case DLL_PROCESS_DETACH:
   {
-    std::cout << "Process detach" << std::endl;
+    std::cout << "Process detach " << hModule << std::endl;
     break;
   }
   }

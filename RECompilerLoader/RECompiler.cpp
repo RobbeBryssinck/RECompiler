@@ -66,6 +66,22 @@ BuildResult BuildInjectedCode()
   return BuildResult::kUnknown;
 }
 
+void TerminateExistingHooks()
+{
+  // TODO: make event name unique
+  HANDLE hTerminateHooks = CreateEvent(NULL, FALSE, FALSE, TEXT("TerminateHooksRE"));
+  if (hTerminateHooks)
+  {
+    BOOL setEventResult = SetEvent(hTerminateHooks);
+    if (setEventResult == FALSE)
+      std::cout << "Failed to set event.\n";
+  }
+  else
+  {
+    std::cout << "Failed to create TerminateHooksRE event.\n";
+  }
+}
+
 int main()
 {
   switch (s_settings.LoadSettings())
@@ -141,11 +157,4 @@ int main()
 
   int a;
   std::cin >> a;
-
-#if 0
-  void* pUnloadArgs = VirtualAllocEx(process.hProcess, 0, sizeof(HMODULE) + sizeof(DWORD), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-  uint32_t unloadArgs[2] = { 0, 0 };
-  WriteProcessMemory(process.hProcess, pUnloadArgs, unloadArgs, )
-  HANDLE dllUnloadThread = CreateRemoteThread(process.hProcess, nullptr, 0, (LPTHREAD_START_ROUTINE)FreeLibraryAndExitThread, )
-#endif
 }
