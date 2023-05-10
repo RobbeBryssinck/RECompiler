@@ -66,22 +66,6 @@ BuildResult BuildInjectedCode()
   return BuildResult::kUnknown;
 }
 
-void TerminateExistingHooks()
-{
-  // TODO: make event name unique
-  HANDLE hTerminateHooks = CreateEvent(NULL, FALSE, FALSE, TEXT("TerminateHooksRE"));
-  if (hTerminateHooks)
-  {
-    BOOL setEventResult = SetEvent(hTerminateHooks);
-    if (setEventResult == FALSE)
-      std::cout << "Failed to set event.\n";
-  }
-  else
-  {
-    std::cout << "Failed to create TerminateHooksRE event.\n";
-  }
-}
-
 int main()
 {
   switch (s_settings.LoadSettings())
