@@ -79,7 +79,7 @@ bool ExecuteRECompiler()
   case Settings::LoadResult::kTargetPathNotFound:
   case Settings::LoadResult::kDllPathNotFound:
   default:
-    std::cout << "Loading settings failed.\n";
+    std::cerr << "Loading settings failed.\n";
     return false;
   }
 
@@ -90,7 +90,7 @@ bool ExecuteRECompiler()
     std::cout << "Build succeeded.\n";
     break;
   default:
-    std::cout << "Build failed.\n";
+    std::cerr << "Build failed.\n";
     return false;
   }
 
@@ -103,20 +103,20 @@ bool ExecuteRECompiler()
 
   if (!CreateProcessA(NULL, const_cast<char*>(s_settings.targetPath.c_str()), NULL, NULL, FALSE, CREATE_SUSPENDED | CREATE_NEW_CONSOLE, NULL, NULL, &startup, &process))
   {
-    std::cout << "Failed to create process: " << GetLastError() << "\n";
+    std::cerr << "Failed to create process: " << GetLastError() << "\n";
     return false;
   }
 
   if (process.hProcess == NULL || process.hProcess == INVALID_HANDLE_VALUE)
   {
-    std::cout << "No process handle found.\n";
+    std::cerr << "No process handle found.\n";
     return false;
   }
 
   void* pInjected = VirtualAllocEx(process.hProcess, 0, MAX_PATH, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
   if (!pInjected)
   {
-    std::cout << "Failed to allocate injected memory.\n";
+    std::cerr << "Failed to allocate injected memory.\n";
     return false;
   }
 
