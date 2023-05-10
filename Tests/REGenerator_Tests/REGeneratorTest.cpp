@@ -54,4 +54,11 @@ namespace
 
     EXPECT_EQ(result, REGenerator::GenerateResult::kMissingTemplateDir);
   }
+
+  TEST(REGenerator, InvalidTargetPath)
+  {
+    auto result = REGenerator::Generate("./InvalidTargetPath");
+
+    EXPECT_EQ(result, REGenerator::GenerateResult::kInvalidTargetPath);
+  }
 }
