@@ -154,6 +154,9 @@ static IdaFunction<decltype(j___CheckForDebuggerJustMyCode)> Real_j___CheckForDe
 // Symbol defined, type: global variable, address: 0x1400230d8
 static IdaVariable<unsigned __int8> __14D56680_main_cpp { 143576 };
 
+// Symbol defined, type: global variable, address: 0x14001e014
+static IdaVariable<unsigned __int8> s_secret { 122900 };
+
 // Symbol defined, type: global variable, address: 0x14001abb0
 static IdaVariable<const unsigned __int8[3]> validXoredKeys { 109488 };
 

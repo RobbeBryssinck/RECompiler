@@ -46,7 +46,7 @@ _BOOL8 __fastcall IsKeyValid(unsigned __int8 aKey)
 
   j___CheckForDebuggerJustMyCode(&__14D56680_main_cpp.Get());
 
-  xoredKey = aKey ^ 0x17;
+  xoredKey = s_secret.Get() ^ aKey;
 
   found = 0;
   for ( i = 0; i < 3; ++i )
@@ -94,6 +94,7 @@ __int64 __fastcall main_0()
   j_printf("1. Generate key\n");
   j_printf("2. Input key\n");
   j_printf("> ");
+
   j_scanf_s("%d", choice);
 
   v7 = choice[0];
@@ -107,6 +108,7 @@ __int64 __fastcall main_0()
     j_printf("Input the key:\n");
     j_printf("> ");
     j_scanf_s("%hhd", v6);
+
     if ( IsKeyValid(v6[0]) )
       j_printf("Key is valid!\n");
     else

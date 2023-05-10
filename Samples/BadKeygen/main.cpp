@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <vector>
 
-static constexpr uint8_t s_secret = 23;
+static uint8_t s_secret = 23;
 static const uint8_t validXoredKeys[3] { 23, 41, 244 };
 
 uint8_t GenerateKey()
