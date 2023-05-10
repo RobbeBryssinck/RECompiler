@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include <iostream>
 #include <MinHook.h>
+#include "TargetApplication.exe.h"
 
 DWORD WINAPI MainThread(HMODULE hModule)
 {
@@ -31,15 +32,6 @@ DWORD WINAPI MainThread(HMODULE hModule)
   return 0;
 }
 
-using TGoToSleep = bool(DWORD);
-static TGoToSleep* RealGoToSleep = (TGoToSleep*)0x140012170;
-
-bool GoToSleep(DWORD ms)
-{
-  std::cout << "Hooked GoToSleep()!\n";
-  return RealGoToSleep(ms);
-}
-
 extern "C" BOOL APIENTRY DllMain(HMODULE hModule,
   DWORD  ul_reason_for_call,
   LPVOID lpReserved
@@ -49,30 +41,8 @@ extern "C" BOOL APIENTRY DllMain(HMODULE hModule,
   {
   case DLL_PROCESS_ATTACH:
   {
-    MH_STATUS status;
-
-    status = MH_Initialize();
-    if (status != MH_OK)
-    {
-      std::cout << "Failed to initialize MinHook " << status << std::endl;
+    if (!InitializeHooks())
       return FALSE;
-    }
-
-    TGoToSleep* originalGoToSleep = RealGoToSleep;
-
-    status = MH_CreateHook(RealGoToSleep, GoToSleep, (LPVOID*)&RealGoToSleep);
-    if (status != MH_OK)
-    {
-      std::cout << "Failed to create MinHook " << status << std::endl;
-      return FALSE;
-    }
-
-    status = MH_EnableHook(originalGoToSleep);
-    if (status != MH_OK)
-    {
-      std::cout << "Failed to enable MinHook " << status << std::endl;
-      return FALSE;
-    }
 
     std::cout << "DLL entry succeeded!\n";
 
