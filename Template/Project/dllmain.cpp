@@ -30,6 +30,22 @@ extern "C" BOOL APIENTRY DllMain(HMODULE hModule,
     if (!InitializeHooks())
       return FALSE;
 
+    // This can be enabled if the user wants to attach their debugger on launch.
+    // The RECompiler program waits for DllMain to return before resuming the process.
+#if 0
+    if (!IsDebuggerPresent())
+      Sleep(1000);
+
+    // Optionally, this snippet of code can be used to wait for user input before continuing.
+#if 0
+    while (true)
+    {
+      if (GetAsyncKeyState(VK_NUMPAD0) & 1)
+        break;
+    }
+#endif
+#endif
+
     CloseHandle(CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)MainThread, hModule, 0, nullptr));
 
     break;
