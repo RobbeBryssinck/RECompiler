@@ -59,4 +59,11 @@ int main(int argc, char** argv)
     std::cerr << "RELauncher launch failed." << std::endl;
     return 1;
   }
+
+  ResumeThread(launchInfo.thread);
+
+  if (launchInfo.thread)
+    CloseHandle(launchInfo.thread);
+  if (launchInfo.process)
+    CloseHandle(launchInfo.process);
 }

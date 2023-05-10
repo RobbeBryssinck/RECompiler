@@ -69,6 +69,7 @@ namespace
       SettingsFixture::TearDown();
       // TODO: exit code?
       TerminateProcess(info.process, 1);
+      CloseHandle(info.thread);
       CloseHandle(info.process);
     }
 

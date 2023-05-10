@@ -1,4 +1,4 @@
-#include <iostream>
+#include <stdio.h>
 #include <Windows.h>
 
 enum TestEnum1
@@ -27,18 +27,29 @@ public:
 
 bool PrintTestClass(TestClass1* apTc1)
 {
-  std::cout << apTc1->t1.a << std::endl;
+  //std::cout << apTc1->t1.a << std::endl;
   return true;
 }
 
 int main(int argc, char** argv)
 {
-  TestClass1 tc1{};
-  tc1.t1.a = kTestC;
-  while (true)
+  if (argc == 1)
   {
-    bool result = PrintTestClass(&tc1);
-    std::cout << result << std::endl;
-    Sleep(2000);
+    printf("No arguments given.\n");
+    return 1;
   }
+
+  if (!stricmp(argv[1], "GoodPath"))
+  {
+    printf("Executing the good path.\n");
+    return 0;
+  }
+  else if (!stricmp(argv[1], "BadPath"))
+  {
+    printf("Executing the bad path.\n");
+    return 2;
+  }
+  
+  printf("Executing an unknown path.\n");
+  return 3;
 }

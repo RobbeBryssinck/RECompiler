@@ -43,10 +43,11 @@ namespace RELauncher
   {
     LaunchInfo() = default;
     LaunchInfo(LaunchResult aResult) : result(aResult), process(nullptr) {}
-    LaunchInfo(LaunchResult aResult, HANDLE aProcess) : result(aResult), process(aProcess) {}
+    LaunchInfo(LaunchResult aResult, HANDLE aProcess, HANDLE aThread) : result(aResult), process(aProcess), thread(aThread) {}
 
     LaunchResult result;
     HANDLE process;
+    HANDLE thread;
   };
 
   LaunchInfo Launch(const Settings& aSettings);

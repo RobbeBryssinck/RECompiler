@@ -88,6 +88,9 @@ namespace RELauncher
     return BuildResult::kUnknown;
   }
 
+  // If succeeded, returns a handle to the launched process
+  // and a handle to the main thread. The thread remains suspended.
+  // The user can call the "ResumeThread" winapi function to start execution.
   LaunchInfo Launch(const Settings& aSettings)
   {
     if (!aSettings.isInitialized)
@@ -134,9 +137,7 @@ namespace RELauncher
 
     VirtualFreeEx(process.hProcess, pInjected, MAX_PATH, MEM_DECOMMIT | MEM_RELEASE);
 
-    ResumeThread(process.hThread);
-
-    return { LaunchResult::kOk, process.hProcess };
+    return { LaunchResult::kOk, process.hProcess, process.hThread };
   }
 
 }
