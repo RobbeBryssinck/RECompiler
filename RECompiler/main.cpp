@@ -192,5 +192,5 @@ int main(int argc, char** argv)
 
   CloseHandle(process.hProcess);
 
-  std::cout << "Process successfully launched." << std::endl;
+  std::cout << "Process launched successfully." << std::endl;
 }

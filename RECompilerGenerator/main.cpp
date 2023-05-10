@@ -97,6 +97,8 @@ int main(int argc, char** argv)
     return 1;
   }
 
+  std::cout << "Select a target directory in which the RECompiler project will be created.\n";
+
   std::string path = "";
   if (argc == 2)
     path = argv[1];
@@ -104,15 +106,6 @@ int main(int argc, char** argv)
     path = GetFolder();
 
   std::filesystem::copy("./Template", path, std::filesystem::copy_options::overwrite_existing | std::filesystem::copy_options::recursive);
-
-#if 0
-  std::cout << "Project name (blank for default):" << std::endl;
-  
-  std::string projectName;
-  std::cin >> projectName;
-  if (projectName != "")
-    SetProjectName(path, projectName);
-#endif
 
   std::filesystem::path targetPath = path;
   std::string projectName = targetPath.filename().string();
