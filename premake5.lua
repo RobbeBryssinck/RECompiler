@@ -24,5 +24,6 @@ workspace "RECompiler"
    objdir ("Build/Obj/%{cfg.longname}")
 
 include("Libraries")
-include("RECompilerLoader")
+include("RECompiler")
+include("RECompilerGenerator")
 include("Samples")

@@ -1,5 +1,5 @@
 group "Apps"
-project "RECompilerLoader"
+project "RECompiler"
    kind "ConsoleApp"
    language "C++"
 
@@ -7,7 +7,6 @@ project "RECompilerLoader"
 
    includedirs
    {
-      "../Vendor/spdlog/include",
       "../Vendor/simpleini",
       "../Libraries"
    }
