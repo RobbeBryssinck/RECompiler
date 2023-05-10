@@ -119,7 +119,7 @@ def create_signature_type(function_address: int) -> str:
     for i in range(function_details.size()):
         if i != 0:
             arguments = arguments + ", "
-        arguments = arguments + "{}".format(ida_typeinf.print_tinfo('', 0, 0, idc.PRTYPE_1LINE, function_details[i].type, '', ''))
+        arguments = arguments + ida_typeinf.print_tinfo('', 0, 0, idc.PRTYPE_1LINE, function_details[i].type, '', '')
 
     return "{}({})".format(ida_typeinf.print_tinfo('', 0, 0, idc.PRTYPE_1LINE, function_details.rettype, '', ''), arguments)
 
@@ -135,10 +135,12 @@ def generate_function(sdk_header_file_name: str, sdk_impl_file_name: str, functi
 
     function_name = get_name_at_address(function_address)
 
-    type_name: str = "T{}".format(function_name)
+    function_address_hex: str = hex(function_address)
+    type_name: str = f"T{function_name}"
     signature_type: str = create_signature_type(function_address)
-    real_function_variable = "Real_{}".format(function_name)
-    metadata = "\n// Symbol defined, type: {} function, address: {}".format("stub" if is_stub else "full", hex(function_address))
+    real_function_variable = f"Real_{function_name}"
+    symbol_type: str = "stub" if is_stub else "full"
+    metadata = f"\n// Symbol defined, type: {symbol_type} function, address: {hex(function_address)}"
 
     is_variadic: bool = False
 
@@ -156,14 +158,14 @@ def generate_function(sdk_header_file_name: str, sdk_impl_file_name: str, functi
                 break
         
         if not found_signature:
-            raise RuntimeError("No signature found in function {}".format(function_name))
+            raise RuntimeError(f"No signature found in function {function_name}")
         
         signature = signature.rstrip("\n") + ";\n"
         f.write(signature)
 
         is_variadic = ", ...)" in signature
 
-        f.write("static IdaFunction<decltype({function_name})> {real_function_variable} {{ {function_rva}, &{function_name} }};\n".format(function_name=function_name, real_function_variable=real_function_variable, function_rva=function_rva))
+        f.write(f"static IdaFunction<decltype({function_name})> {real_function_variable} {{ {function_rva}, &{function_name} }};\n")
 
     with open(sdk_impl_file_name, 'r+') as f:
         if is_stub:
@@ -179,14 +181,15 @@ def generate_function(sdk_header_file_name: str, sdk_impl_file_name: str, functi
 
                 argument: str = function_details[i].name
                 if argument == "":
-                    argument = "a{}".format(i + 1)
+                    argument = f"a{i + 1}"
 
                 arguments = arguments + argument
 
+            get_raw: str = ""
             if is_variadic:
-                decompiled_output.append("  return {}.GetRawFunctionPointer()({});".format(real_function_variable, arguments))
-            else:
-                decompiled_output.append("  return {}({});".format(real_function_variable, arguments))
+                get_raw = ".GetRawFunctionPointer()"
+
+            decompiled_output.append(f"  return {real_function_variable}{get_raw}({arguments});")
 
             decompiled_output.append("}")
 
@@ -202,7 +205,7 @@ def generate_function(sdk_header_file_name: str, sdk_impl_file_name: str, functi
                 # 'shift' variable is needed for the insertions.
                 shift = 0
                 # Match the whole word
-                regex_string: str = "\\b{}\\b".format(variable_name)
+                regex_string: str = f"\\b{variable_name}\\b"
                 occurences = [m.start() for m in re.finditer(regex_string, decompiled_output)]
                 
                 for occurence in occurences:
@@ -212,11 +215,11 @@ def generate_function(sdk_header_file_name: str, sdk_impl_file_name: str, functi
         
         decompiled_output = decompiled_output.rstrip("\n")
 
-        hook = """{metadata}
+        hook = f"""{metadata}
 {decompiled_output}
 // End of function symbol, address: {function_address_hex}
 
-""".format(metadata=metadata, type_name=type_name, signature_type=signature_type, real_function_variable=real_function_variable, function_address_hex=hex(function_address), decompiled_output=decompiled_output)
+"""
 
         lines = f.readlines()
         f.seek(0)
@@ -226,10 +229,10 @@ def generate_function(sdk_header_file_name: str, sdk_impl_file_name: str, functi
         f.truncate()
     
     with open(sdk_impl_file_name, 'r+') as f:
-        hook = """
+        hook = f"""
   // Hook installation, address: {function_address_hex}
   {real_function_variable}.InstallHook();
-""".format(function_address_hex=hex(function_address), real_function_variable=real_function_variable)
+"""
         
         lines = f.readlines()
         f.seek(0)
@@ -253,7 +256,7 @@ def generate_global_variable(sdk_header_file_name: str, variable_address: int):
     variable_rva: int = get_rva(variable_address)
 
     with open(sdk_header_file_name, 'a') as f:
-        f.write("\n// Symbol defined, type: global variable, address: {}\n".format(hex(variable_address)))
+        f.write(f"\n// Symbol defined, type: global variable, address: {hex(variable_address)}\n")
         
         type_name: str = idc.get_type(variable_address)
         if type_name is None:
@@ -261,7 +264,7 @@ def generate_global_variable(sdk_header_file_name: str, variable_address: int):
             if type_name is None:
                 type_name = "_UNKNOWN"
 
-        f.write("static IdaVariable<{type_name}> {variable_name} {{ {variable_rva} }};\n".format(type_name=type_name, variable_name=variable_name, variable_rva=variable_rva))
+        f.write(f"static IdaVariable<{type_name}> {variable_name} {{ {variable_rva} }};\n")
 
 def delete_function_if_exists(sdk_header_file_name: str, sdk_impl_file_name: str, function_address: int):
     delete_declaration_if_exists(sdk_header_file_name, function_address)
@@ -350,7 +353,7 @@ def initialize_settings_file(ini_path: str):
         config.write(f)
 
 def initialize_project() -> str:
-    ini_path: str = "./{}.ini".format(ida_nalt.get_root_filename())
+    ini_path: str = f"./{ida_nalt.get_root_filename()}.ini"
 
     if not os.path.exists(ini_path):
         dialogue_result = ida_kernwin.ask_yn(ida_kernwin.ASKBTN_CANCEL, "Config file for RECompiler project not found. Would you like to generate it?")
@@ -368,7 +371,7 @@ def initialize_project() -> str:
     
     project_path: str = config["global"]["project_path"]
     while not os.path.exists(project_path):
-        ida_kernwin.warning("Project path '{}' does not exist. Please try again.".format(project_path))
+        ida_kernwin.warning(f"Project path '{project_path}' does not exist. Please try again.")
         initialize_settings_file(ini_path)
 
         config = configparser.ConfigParser()
@@ -388,12 +391,12 @@ if __name__ == "__main__":
 
     sdk_header_file_name = project_path + "/" + project_name + "/RESDK.h"
     if not os.path.exists(sdk_header_file_name):
-        ida_kernwin.warning("SDK header file '{}' not found. Confirm the path in the ini setting file.".format(sdk_header_file_name))
+        ida_kernwin.warning(f"SDK header file '{sdk_header_file_name}' not found. Confirm the path in the ini setting file.")
         exit()
     
     sdk_impl_file_name = project_path + "/" + project_name + "/RESDK.cpp"
     if not os.path.exists(sdk_impl_file_name):
-        ida_kernwin.warning("SDK implementation file '{}' not found. Confirm the path in the ini setting file.".format(sdk_impl_file_name))
+        ida_kernwin.warning(f"SDK implementation file '{sdk_impl_file_name}' not found. Confirm the path in the ini setting file.")
         exit()
 
     ea: int = ida_kernwin.get_screen_ea()
@@ -412,5 +415,5 @@ if __name__ == "__main__":
 
     generate_function(sdk_header_file_name, sdk_impl_file_name, function_address, False, global_data)
 
-    print("RECompiler generator has finished running, data was dumped in project '{}'.".format(project_path))
+    print(f"RECompiler generator has finished running, data was dumped in project '{project_path}'.")
 
