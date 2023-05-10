@@ -29,4 +29,29 @@ namespace
 
     EXPECT_EQ(result, REGenerator::GenerateResult::kOk);
   }
+
+  class DeleteTemplate : public ScopedSampleDir
+  {
+  protected:
+    void SetUp() override
+    {
+      ScopedSampleDir::SetUp();
+
+      std::filesystem::rename("./Template", "./TemplateOld");
+    }
+
+    void TearDown() override
+    {
+      ScopedSampleDir::TearDown();
+
+      std::filesystem::rename("./TemplateOld", "./Template");
+    }
+  };
+
+  TEST_F(DeleteTemplate, FaultNoTemplate)
+  {
+    auto result = REGenerator::Generate("./Sample");
+
+    EXPECT_EQ(result, REGenerator::GenerateResult::kMissingTemplateDir);
+  }
 }
