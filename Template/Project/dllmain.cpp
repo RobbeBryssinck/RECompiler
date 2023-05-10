@@ -33,7 +33,7 @@ extern "C" BOOL APIENTRY DllMain(HMODULE hModule,
     // This can be enabled if the user wants to attach their debugger on launch.
     // The RECompiler program waits for DllMain to return before resuming the process.
 #if 0
-    if (!IsDebuggerPresent())
+    while (!IsDebuggerPresent())
       Sleep(1000);
 
     // Optionally, this snippet of code can be used to wait for user input before continuing.
