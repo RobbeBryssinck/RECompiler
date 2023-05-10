@@ -97,13 +97,14 @@ int main(int argc, char** argv)
     return 1;
   }
 
-  std::cout << "Select a target directory in which the RECompiler project will be created.\n";
-
   std::string path = "";
   if (argc == 2)
     path = argv[1];
   else
+  {
+    std::cout << "Select a target directory in which the RECompiler project will be created.\n";
     path = GetFolder();
+  }
 
   std::filesystem::copy("./Template", path, std::filesystem::copy_options::overwrite_existing | std::filesystem::copy_options::recursive);
 
