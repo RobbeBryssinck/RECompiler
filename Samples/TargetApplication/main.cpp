@@ -16,9 +16,9 @@ class DummyString
 public:
   DummyString(const char* apData)
   {
-    size = strlen(apData);
+    size = strlen(apData) + 1;
     pData = new char[size];
-    memcpy(pData, apData, size + 1);
+    memcpy(pData, apData, size);
   }
 
   ~DummyString()
