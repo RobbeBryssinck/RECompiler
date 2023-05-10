@@ -16,10 +16,12 @@ struct Settings
 
   LoadResult LoadSettings()
   {
+    constexpr const char* pIniFilename = ".\\settings.ini";
+
     CSimpleIniA ini;
     ini.SetUnicode();
 
-    SI_Error rc = ini.LoadFile(".\\settings.ini");
+    SI_Error rc = ini.LoadFile(pIniFilename);
     if (rc < 0)
       return LoadResult::kSettingsFileNotFound;
 
@@ -34,6 +36,10 @@ struct Settings
 
       if (!std::filesystem::exists(targetPath))
         return LoadResult::kTargetPathNotFound;
+
+      ini.SetValue("global", "target_path", targetPath.c_str());
+
+      rc = ini.SaveFile(pIniFilename);
     }
 
     buildPath = (std::filesystem::current_path() / "Generated" / "Project.vcxproj").string();
