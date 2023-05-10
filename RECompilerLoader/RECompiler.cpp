@@ -136,7 +136,4 @@ int main()
   ResumeThread(process.hThread);
 
   CloseHandle(process.hProcess);
-
-  int a;
-  std::cin >> a;
 }
