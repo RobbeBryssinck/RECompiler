@@ -111,11 +111,6 @@ typedef int bool;       // we want to use bool in our C programs
 #define WORDn(x, n)   (*((_WORD*)&(x)+n))
 #define DWORDn(x, n)  (*((_DWORD*)&(x)+n))
 
-#define LOBYTE(x)  BYTEn(x,LOW_IND(x,_BYTE))
-#define LOWORD(x)  WORDn(x,LOW_IND(x,_WORD))
-#define LODWORD(x) DWORDn(x,LOW_IND(x,_DWORD))
-#define HIBYTE(x)  BYTEn(x,HIGH_IND(x,_BYTE))
-#define HIWORD(x)  WORDn(x,HIGH_IND(x,_WORD))
 #define HIDWORD(x) DWORDn(x,HIGH_IND(x,_DWORD))
 #define BYTE1(x)   BYTEn(x,  1)         // byte 1 (counting from 0)
 #define BYTE2(x)   BYTEn(x,  2)
@@ -419,11 +414,6 @@ void __noreturn __break(uint16 code, uint16 subcode);
 // for example a char:
 
 #define _UNKNOWN char
-
-#ifdef _MSC_VER
-#define snprintf _snprintf
-#define vsnprintf _vsnprintf
-#endif
 
 // The ADJ() macro is used for shifted pointers.
 // While compilers do not understand it, it makes the code more readable.

@@ -1,9 +1,12 @@
 #include <iostream>
 #include <Windows.h>
 
+static uint64_t s_testInt = 0;
+
 bool GoToSleep(DWORD ms)
 {
   Sleep(ms);
+  printf("Test int: %d", s_testInt);
   return true;
 }
 
