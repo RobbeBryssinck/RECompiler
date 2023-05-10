@@ -3,7 +3,7 @@
 #include <MinHook.h>
 #include "TargetApplication.exe.h"
 
-DWORD WINAPI MainThread(HMODULE hModule)
+void ListenForTerminateHooks(HMODULE hModule)
 {
   HANDLE hTerminateHooks = CreateEvent(NULL, FALSE, FALSE, TEXT("TerminateHooksRE"));
   if (hTerminateHooks)
@@ -28,6 +28,10 @@ DWORD WINAPI MainThread(HMODULE hModule)
   {
     std::cout << "Failed to create TerminateHooksRE event.\n";
   }
+}
+
+DWORD WINAPI MainThread(HMODULE hModule)
+{
 
   return 0;
 }

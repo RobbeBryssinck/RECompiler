@@ -144,10 +144,8 @@ int main()
     threadResult = WaitForSingleObject(dllLoadThread, 1000);
   } while (threadResult != 0);
 
-#if 1
   if (dllLoadThread != NULL && dllLoadThread != INVALID_HANDLE_VALUE)
     CloseHandle(dllLoadThread);
-#endif
 
   VirtualFreeEx(process.hProcess, pInjected, MAX_PATH, MEM_DECOMMIT | MEM_RELEASE);
 
