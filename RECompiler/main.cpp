@@ -44,7 +44,6 @@ struct Settings
         return LoadResult::kTargetPathNotFound;
 
       ini.SetValue("global", "target_path", targetPath.c_str());
-
     }
 
     buildPath = ini.GetValue("global", "build_path");
