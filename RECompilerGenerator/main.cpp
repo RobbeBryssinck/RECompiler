@@ -3,6 +3,7 @@
 #include <RECore/FileHandling.h>
 #include <filesystem>
 #include <fstream>
+#include <SimpleIni.h>
 
 std::string GetFolder()
 {
@@ -58,6 +59,30 @@ void SetProjectName(const std::string& aProjectPath, const std::string& aProject
   std::filesystem::rename(aProjectPath + "/" + defaultName, aProjectPath + "/" + aProjectName);
 }
 
+bool GenerateSettingsFile(const std::string& aPath, const std::string& aProjectName)
+{
+  const std::string iniFilename = aPath + "\\settings.ini";
+
+  CSimpleIniA ini;
+  ini.SetUnicode();
+
+  SI_Error rc = ini.LoadFile(iniFilename.c_str());
+  if (rc < 0)
+    return false;
+
+  std::string buildPath{ aPath + "\\Generated\\" + aProjectName + ".vcxproj" };
+  ini.SetValue("global", "build_path", buildPath.c_str());
+
+  std::string dllPath{ aPath + "\\Build\\Bin\\Debug\\" + aProjectName + ".dll" };
+  ini.SetValue("global", "dll_path", dllPath.c_str());
+
+  rc = ini.SaveFile(iniFilename.c_str());
+  if (rc < 0)
+    return false;
+
+  return true;
+}
+
 int main(int argc, char** argv)
 {
   if (argc > 2)
@@ -92,6 +117,8 @@ int main(int argc, char** argv)
   std::filesystem::path targetPath = path;
   std::string projectName = targetPath.filename().string();
   SetProjectName(path, projectName);
+
+  GenerateSettingsFile(path, projectName);
 
   std::cout << "Project was successfully generated at '" << path << "'\n"
     << "Run 'generateSolution.bat' in the output directory to generate the Visual Studio project files." << std::endl;

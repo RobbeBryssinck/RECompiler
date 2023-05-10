@@ -14,7 +14,10 @@ struct Settings
     kGenerateSolutionNotFound,
     kTargetPathNotFound,
     kBuildPathNotFound,
+    kNoBuildPath,
     kGenerateSolutionFailed,
+    kDllPathNotFound,
+    kIniSaveFailed,
   };
 
   LoadResult LoadSettings()
@@ -29,7 +32,7 @@ struct Settings
       return LoadResult::kSettingsFileNotFound;
 
     targetPath = ini.GetValue("global", "target_path");
-    if (targetPath.empty() || !std::filesystem::exists(targetPath))
+    if (!std::filesystem::exists(targetPath))
     {
       std::cout << "Target path not found, please select the target binary." << std::endl;
 
@@ -42,10 +45,9 @@ struct Settings
 
       ini.SetValue("global", "target_path", targetPath.c_str());
 
-      rc = ini.SaveFile(pIniFilename);
     }
 
-    buildPath = (std::filesystem::current_path() / "Generated" / "Project.vcxproj").string();
+    buildPath = ini.GetValue("global", "build_path");
     if (!std::filesystem::exists(buildPath))
     {
       if (!std::filesystem::exists(".\\generateSolution.bat"))
@@ -56,10 +58,25 @@ struct Settings
         return LoadResult::kGenerateSolutionFailed;
 
       if (!std::filesystem::exists(buildPath))
-        return LoadResult::kBuildPathNotFound;
+      {
+        std::cout << "Project file to build not found, please select the target vcxproj file." << std::endl;
+
+        std::string title = "Target VS project";
+        FileFilters filters{ {"VS project", "*.vcxproj"} };
+        buildPath = OpenFileDialogue(&title, &filters);
+
+        ini.SetValue("global", "build_path", buildPath.c_str());
+
+        if (!std::filesystem::exists(buildPath))
+          return LoadResult::kBuildPathNotFound;
+      }
     }
 
-    dllPath = (std::filesystem::current_path() / "Build" / "Bin" / "Debug" / "Project.dll").string();
+    dllPath = ini.GetValue("global", "dll_path");
+
+    rc = ini.SaveFile(pIniFilename);
+    if (rc < 0)
+      return LoadResult::kIniSaveFailed;
 
     return LoadResult::kOk;
   }
@@ -102,6 +119,9 @@ int main(int argc, char** argv)
     break;
   case Settings::LoadResult::kBuildPathNotFound:
     std::cerr << "Build path not found." << std::endl;
+    break;
+  case Settings::LoadResult::kDllPathNotFound:
+    std::cerr << "Dll path not found." << std::endl;
     break;
   case Settings::LoadResult::kGenerateSolutionNotFound:
     std::cerr << "'generateSolution.bat' file not found." << std::endl;
