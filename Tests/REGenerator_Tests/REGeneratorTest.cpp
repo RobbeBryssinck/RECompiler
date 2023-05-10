@@ -61,4 +61,27 @@ namespace
 
     EXPECT_EQ(result, REGenerator::GenerateResult::kInvalidTargetPath);
   }
+
+  class NonEmptyTarget : public ScopedSampleDir
+  {
+  protected:
+    void SetUp() override
+    {
+      ScopedSampleDir::SetUp();
+
+      std::filesystem::create_directory("./Sample/Dir");
+    }
+
+    void TearDown() override
+    {
+      ScopedSampleDir::TearDown();
+    }
+  };
+
+  TEST_F(NonEmptyTarget, TestNonEmptyTargetDir)
+  {
+    auto result = REGenerator::Generate("./Sample");
+
+    EXPECT_EQ(result, REGenerator::GenerateResult::kTargetDirNotEmpty);
+  }
 }
