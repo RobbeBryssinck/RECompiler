@@ -1,6 +1,8 @@
 #include <Windows.h>
 #include <iostream>
 #include <MinHook.h>
+
+// The SDK header should be included here.
 #include "TargetApplication.exe.h"
 
 void ListenForTerminateHooks(HMODULE hModule)
