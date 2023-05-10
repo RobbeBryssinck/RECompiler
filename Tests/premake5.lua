@@ -1,4 +1,5 @@
 group "Tests"
-include("RECompiler_Tests")
-include("RECompilerGenerator_Tests")
 include("Samples")
+include("RELauncher_Tests")
+include("REGenerator_Tests")
+include("RECompiler_Tests")

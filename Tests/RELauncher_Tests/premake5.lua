@@ -1,5 +1,5 @@
 group("Tests")
-project "RECompilerGenerator_Tests"
+project "RELauncher_Tests"
    kind "ConsoleApp"
    language "C++"
 
@@ -17,4 +17,4 @@ project "RECompilerGenerator_Tests"
    }
 
    links "googletest"
-   links "REGenerator"
+   links "RELauncher"
