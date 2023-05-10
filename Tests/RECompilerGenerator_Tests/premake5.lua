@@ -7,12 +7,14 @@ project "RECompilerGenerator_Tests"
 
    includedirs
    {
-      "../../Vendor/googletest/include"
+      "../../Vendor/googletest/include",
+      "../../Components"
    }
 
    libdirs
    {
-      "../Build/Bin/%{cfg.longname}"
+      "../../Build/Bin/%{cfg.longname}"
    }
 
    links "googletest"
+   links "REGenerator"
