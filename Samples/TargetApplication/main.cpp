@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <Windows.h>
 #include <cstdint>
-#include <string>
 
 static uint64_t s_testInt = 0;
 
@@ -12,20 +11,38 @@ bool GoToSleep(DWORD ms)
   return true;
 }
 
+class DummyString
+{
+public:
+  DummyString(const char* apData)
+  {
+    size = strlen(apData);
+    pData = new char[size];
+    memcpy(pData, apData, size + 1);
+  }
+
+  ~DummyString()
+  {
+    delete[] pData;
+  }
+
+  size_t size{};
+  char* pData{};
+};
+
 class Dummy
 {
 public:
   int a = 5;
   uint64_t b = 0xFFFF;
   Dummy* pAnotherDummy = nullptr;
-  std::string dummyName = "Bobby";
+  DummyString dummyName = DummyString("Bobby");
 
   void PrintName()
   {
-    printf("Dummy %s", dummyName.c_str());
+    printf("Dummy %s\n", dummyName.pData);
   }
 };
-
 
 int main()
 {
