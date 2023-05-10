@@ -56,6 +56,11 @@ _BOOL8 __fastcall IsKeyValid(unsigned __int8 aKey)
       break;
   }
 
+  if (found)
+    j_printf("Valid key found: %d\n", aKey);
+  else
+    j_printf("Key is not valid: %d\n", aKey);
+
   return found;
 }
 // End of function symbol, address: 0x140011830
@@ -89,6 +94,9 @@ __int64 __fastcall main_0()
   }
 
   j___CheckForDebuggerJustMyCode(&__14D56680_main_cpp.Get());
+
+  while (true)
+    Sleep(1000);
 
   j_printf("Choose an option:\n");
   j_printf("1. Generate key\n");
