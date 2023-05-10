@@ -26,4 +26,3 @@ workspace "RECompiler"
 include("Libraries")
 include("RECompiler")
 include("RECompilerGenerator")
-include("Samples")
