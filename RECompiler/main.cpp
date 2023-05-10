@@ -11,7 +11,10 @@ struct Settings
   {
     kOk = 0,
     kSettingsFileNotFound,
+    kGenerateSolutionNotFound,
     kTargetPathNotFound,
+    kBuildPathNotFound,
+    kGenerateSolutionFailed,
   };
 
   LoadResult LoadSettings()
@@ -43,6 +46,19 @@ struct Settings
     }
 
     buildPath = (std::filesystem::current_path() / "Generated" / "Project.vcxproj").string();
+    if (!std::filesystem::exists(buildPath))
+    {
+      if (!std::filesystem::exists(".\\generateSolution.bat"))
+        return LoadResult::kGenerateSolutionNotFound;
+
+      int ret = system(".\\generateSolution.bat");
+      if (ret != 0)
+        return LoadResult::kGenerateSolutionFailed;
+
+      if (!std::filesystem::exists(buildPath))
+        return LoadResult::kBuildPathNotFound;
+    }
+
     dllPath = (std::filesystem::current_path() / "Build" / "Bin" / "Debug" / "Project.dll").string();
 
     return LoadResult::kOk;
@@ -82,10 +98,22 @@ int main(int argc, char** argv)
   case Settings::LoadResult::kOk:
     break;
   case Settings::LoadResult::kTargetPathNotFound:
+    std::cerr << "Target path not found." << std::endl;
+    break;
+  case Settings::LoadResult::kBuildPathNotFound:
+    std::cerr << "Build path not found." << std::endl;
+    break;
+  case Settings::LoadResult::kGenerateSolutionNotFound:
+    std::cerr << "'generateSolution.bat' file not found." << std::endl;
+    break;
+  case Settings::LoadResult::kGenerateSolutionFailed:
+    std::cerr << "Failed to generate solution files." << std::endl;
     break;
   case Settings::LoadResult::kSettingsFileNotFound:
+    std::cerr << "'settings.ini' file not found." << std::endl;
+    break;
   default:
-    std::cerr << "Loading settings failed.\n";
+    std::cerr << "Loading settings failed." << std::endl;
     return 1;
   }
 
