@@ -162,11 +162,6 @@ int main(int argc, char** argv)
   {
     ExecuteRECompiler();
   }
-  else if (argc >= 4)
-  {
-    std::cerr << "Too many arguments." << std::endl;
-    return 1;
-  }
   else if (argc >= 2)
   {
     if (_stricmp(argv[1], "generate"))
