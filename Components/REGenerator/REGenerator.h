@@ -9,6 +9,7 @@ namespace REGenerator
   {
     kOk = 0,
     kInvalidTargetPath,
+    kTargetDirNotEmpty,
     kMissingTemplateDir,
   };
 

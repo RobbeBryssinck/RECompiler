@@ -76,6 +76,9 @@ namespace REGenerator
     if (!std::filesystem::exists(aPath))
       return GenerateResult::kInvalidTargetPath;
 
+    if (!std::filesystem::is_empty(aPath))
+      return GenerateResult::kTargetDirNotEmpty;
+
     if (!std::filesystem::exists("./Template"))
       return GenerateResult::kMissingTemplateDir;
 
