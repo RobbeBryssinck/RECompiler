@@ -45,18 +45,28 @@ extern "C" BOOL APIENTRY DllMain(HMODULE hModule,
   {
     //CloseHandle(CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)MainThread, hModule, 0, nullptr));
 
-    if (MH_Initialize() != MH_OK)
+    MH_STATUS status;
+
+    status = MH_Initialize();
+    if (status != MH_OK)
     {
+      std::cout << "Failed to initialize MinHook " << status << std::endl;
       return FALSE;
     }
 
-    if (MH_CreateHook(RealGoToSleep, &GoToSleep, (LPVOID*)&RealGoToSleep) != MH_OK)
+    TGoToSleep* originalGoToSleep = RealGoToSleep;
+
+    status = MH_CreateHook(RealGoToSleep, GoToSleep, (LPVOID*)&RealGoToSleep);
+    if (status != MH_OK)
     {
+      std::cout << "Failed to create MinHook " << status << std::endl;
       return FALSE;
     }
 
-    if (MH_EnableHook(RealGoToSleep) != MH_OK)
+    status = MH_EnableHook(originalGoToSleep);
+    if (status != MH_OK)
     {
+      std::cout << "Failed to enable MinHook " << status << std::endl;
       return FALSE;
     }
 

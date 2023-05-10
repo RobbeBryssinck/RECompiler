@@ -6,5 +6,12 @@ project "Sandbox"
 
    includedirs
    {
-      "../../Vendor/minhook/include"
+      "../../Libraries/minhook/include"
    }
+
+   libdirs
+   {
+      "../Build/Bin/%{cfg.longname}"
+   }
+
+   links "minhook"

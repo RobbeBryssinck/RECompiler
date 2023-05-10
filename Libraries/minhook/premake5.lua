@@ -2,4 +2,4 @@ project "minhook"
    kind "StaticLib"
    language "C++"
 
-   files {"**.h", "**.cpp", "**.inl"}
+   files {"**.h", "**.cpp", "**.inl", "**.c"}
