@@ -57,7 +57,7 @@ enum class BuildResult
 
 BuildResult BuildInjectedCode()
 {
-  auto command = std::format("MSBuild.exe {}", s_settings.buildPath.c_str());
+  auto command = std::format("MSBuild.exe {} /property:Configuration=Debug /property:Platform=x64", s_settings.buildPath.c_str());
   int ret = system(command.c_str());
 
   if (ret == 0)

@@ -1,5 +1,5 @@
 project "TargetApplication"
-   kind "SharedLib"
+   kind "ConsoleApp"
    language "C++"
 
    files {"**.h", "**.cpp"}
